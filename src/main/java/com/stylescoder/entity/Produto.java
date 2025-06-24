@@ -3,6 +3,9 @@ package com.stylescoder.entity;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+import org.springframework.beans.BeanUtils;
+
+import com.stylescoder.dto.ProdutoDTO;
 import com.stylescoder.enums.Categoria;
 
 import jakarta.persistence.Entity;
@@ -12,7 +15,7 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Produto {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -20,69 +23,60 @@ public class Produto {
 	private Integer quantidade;
 	private BigDecimal valor;
 	private Categoria categoria;
-	
-	
-	
-	public Produto() {
-		
+
+	public Produto(ProdutoDTO produto) {
+		BeanUtils.copyProperties(produto, this);
+
 	}
 
+	public Produto() {
+
+	}
 
 	public Long getId() {
 		return id;
 	}
 
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public String getDescricao() {
 		return descricao;
 	}
 
-
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-
 
 	public Integer getQuantidade() {
 		return quantidade;
 	}
 
-
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
-
 
 	public BigDecimal getValor() {
 		return valor;
 	}
 
-
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-
 
 	public Categoria getCategoria() {
 		return categoria;
 	}
 
-
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
-
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(categoria, descricao, id, quantidade, valor);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -97,6 +91,5 @@ public class Produto {
 				&& Objects.equals(id, other.id) && Objects.equals(quantidade, other.quantidade)
 				&& Objects.equals(valor, other.valor);
 	}
-	
-		
+
 }
