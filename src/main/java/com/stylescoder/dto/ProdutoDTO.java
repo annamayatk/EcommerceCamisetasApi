@@ -18,10 +18,13 @@ public class ProdutoDTO {
 	public ProdutoDTO(Produto produto) {
 		BeanUtils.copyProperties(produto, this);
 	}
+	
 
 	public ProdutoDTO() {
 		
 	}
+
+	
 
 	public Long getId() {
 		return id;
