@@ -1,17 +1,13 @@
 package com.stylescoder.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
-
-import org.springframework.beans.BeanUtils;
 
 import com.stylescoder.dto.ProdutoDTO;
 import com.stylescoder.enums.Categoria;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Produto {
@@ -19,18 +15,38 @@ public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	private String imagem;
 	private String descricao;
 	private Integer quantidade;
 	private BigDecimal valor;
 	private Categoria categoria;
 
-	public Produto(ProdutoDTO produto) {
-		BeanUtils.copyProperties(produto, this);
-
-	}
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ProdutoTamanho> tamanhos;
 
 	public Produto() {
+	}
 
+	public Produto(ProdutoDTO dto, List<Tamanho> tamanhosDisponiveis) {
+		this.id = dto.getId();
+		this.imagem = dto.getImagem();
+		this.descricao = dto.getDescricao();
+		this.quantidade = dto.getQuantidade();
+		this.valor = dto.getValor();
+		this.categoria = dto.getCategoria();
+
+		this.tamanhos = dto.getTamanhos().stream().map(dtoT -> {
+			Tamanho tamanho = tamanhosDisponiveis.stream().filter(t -> t.getId().equals(dtoT.getTamanhoId()))
+					.findFirst()
+					.orElseThrow(() -> new RuntimeException("Tamanho não encontrado: " + dtoT.getTamanhoId()));
+
+			ProdutoTamanho pt = new ProdutoTamanho();
+			pt.setProduto(this);
+			pt.setTamanho(tamanho);
+			pt.setEstoque(dtoT.getEstoque());
+
+			return pt;
+		}).toList();
 	}
 
 	public Long getId() {
@@ -39,6 +55,14 @@ public class Produto {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getImagem() {
+		return imagem;
+	}
+
+	public void setImagem(String imagem) {
+		this.imagem = imagem;
 	}
 
 	public String getDescricao() {
@@ -73,9 +97,17 @@ public class Produto {
 		this.categoria = categoria;
 	}
 
+	public List<ProdutoTamanho> getTamanhos() {
+		return tamanhos;
+	}
+
+	public void setTamanhos(List<ProdutoTamanho> tamanhos) {
+		this.tamanhos = tamanhos;
+	}
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(categoria, descricao, id, quantidade, valor);
+		return Objects.hash(categoria, descricao, id, imagem, quantidade, tamanhos, valor);
 	}
 
 	@Override
@@ -88,7 +120,8 @@ public class Produto {
 			return false;
 		Produto other = (Produto) obj;
 		return categoria == other.categoria && Objects.equals(descricao, other.descricao)
-				&& Objects.equals(id, other.id) && Objects.equals(quantidade, other.quantidade)
+				&& Objects.equals(id, other.id) && Objects.equals(imagem, other.imagem)
+				&& Objects.equals(quantidade, other.quantidade) && Objects.equals(tamanhos, other.tamanhos)
 				&& Objects.equals(valor, other.valor);
 	}
 
