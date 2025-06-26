@@ -3,8 +3,6 @@ package com.stylescoder.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
-
 import com.stylescoder.entity.Produto;
 import com.stylescoder.enums.Categoria;
 
@@ -21,65 +19,77 @@ public class ProdutoDTO {
     public ProdutoDTO() {}
 
     public ProdutoDTO(Produto produto) {
-        BeanUtils.copyProperties(produto, this);
-    
+        this.id = produto.getId();
+        this.imagem = produto.getImagem();
+        this.descricao = produto.getDescricao();
+        this.quantidade = produto.getQuantidade();
+        this.valor = produto.getValor();
+        this.categoria = produto.getCategoria();
+
+       
+        this.tamanhos = produto.getTamanhos().stream()
+            .map(pt -> new ProdutoTamanhoDTO(
+                pt.getTamanho().getId(),
+                pt.getTamanho().getVariacao(),
+                pt.getEstoque()
+            )).toList();
     }
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
 
-	public String getImagem() {
-		return imagem;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setImagem(String imagem) {
-		this.imagem = imagem;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getDescricao() {
-		return descricao;
-	}
+    public String getImagem() {
+        return imagem;
+    }
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
+    public void setImagem(String imagem) {
+        this.imagem = imagem;
+    }
 
-	public Integer getQuantidade() {
-		return quantidade;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
 
-	public BigDecimal getValor() {
-		return valor;
-	}
+    public Integer getQuantidade() {
+        return quantidade;
+    }
 
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
-	}
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
+    public BigDecimal getValor() {
+        return valor;
+    }
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
+    }
 
-	public List<ProdutoTamanhoDTO> getTamanhos() {
-		return tamanhos;
-	}
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
-	public void setTamanhos(List<ProdutoTamanhoDTO> tamanhos) {
-		this.tamanhos = tamanhos;
-	}
-    
-    
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public List<ProdutoTamanhoDTO> getTamanhos() {
+        return tamanhos;
+    }
+
+    public void setTamanhos(List<ProdutoTamanhoDTO> tamanhos) {
+        this.tamanhos = tamanhos;
+    }
 }
