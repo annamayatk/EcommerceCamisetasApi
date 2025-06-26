@@ -1,7 +1,12 @@
 package com.stylescoder.repository;
 
-import com.stylescoder.entity.Usuario;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.stylescoder.entity.Usuario;
+
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    
+    Optional<Usuario> findByEmail(String email); 
 }
