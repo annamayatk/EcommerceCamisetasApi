@@ -5,12 +5,14 @@ import java.time.LocalDate;
 import com.stylescoder.entity.Endereco;
 
 public class UsuarioResponseDTO {
+	
     private Long id;
     private String nome;
     private String email;
     private String celular;
     private LocalDate dataCadastro;
     private Endereco endereco;
+    
 	public Long getId() {
 		return id;
 	}
