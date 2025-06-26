@@ -2,6 +2,8 @@ package com.stylescoder.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,6 +26,7 @@ public class Carrinho {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_venda")
+	@JsonBackReference
 	private Pedido pedido;
 	
 	@ManyToOne
